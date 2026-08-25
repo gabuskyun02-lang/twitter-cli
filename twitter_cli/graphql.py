@@ -78,7 +78,8 @@ _DEFAULT_FEATURES = {
 # Features dict that gets updated dynamically from x.com JS bundles
 FEATURES = dict(_DEFAULT_FEATURES)
 
-从 GitHub twitter-openapi 动态更新 features（X 改版后 features 变化频繁）
+# Dynamically refresh features from GitHub twitter-openapi
+# (X rotates features frequently after redesigns)
 def _update_features_from_github():
     """从 GitHub twitter-openapi 更新 features 映射"""
     import json as _json
@@ -97,7 +98,7 @@ def _update_features_from_github():
                 op_features = op_data.get('features', {})
             if isinstance(op_features, dict):
                 for k, v in op_features.items():
-                    FEATURES[k] = v  # 覆盖已有值也加入新值
+                    FEATURES[k] = v
         import logging
         logging.getLogger(__name__).info("Updated FEATURES from GitHub: %d keys", len(FEATURES))
     except Exception as exc:
@@ -149,7 +150,7 @@ def _scan_bundles(url_fetch_fn):
     try:
         from .constants import get_user_agent
         html = url_fetch_fn("https://x.com/search?q=AI&f=live", {"user-agent": get_user_agent()})
-        匹配旧版 responsive-web 和新版 x-web 的 JS URL
+        # 匹配旧版 responsive-web 和新版 x-web 的 JS URL
         script_pattern = re.compile(
             r'(?:src|href)=["\']'
             r'(https://abs\.twimg\.com/(?:responsive-web/client-web|x-web/x-web)[^"\']+'
@@ -158,8 +159,7 @@ def _scan_bundles(url_fetch_fn):
         )
         script_urls = script_pattern.findall(html)
         
-        X 改版后 chunk 文件在 entry-client JS 里引用，需要递归扫描
-        # entry-client JS 里 __vite__mapDeps 包含所有 chunk 文件名
+        # X 改版后 chunk 文件在 entry-client JS 里引用，需要递归扫描        # entry-client JS 里 __vite__mapDeps 包含所有 chunk 文件名
         for main_url in list(script_urls):
             try:
                 main_bundle = url_fetch_fn(main_url)
@@ -249,7 +249,7 @@ def _resolve_query_id(operation_name, prefer_fallback=True, url_fetch_fn=None):
     if cached:
         return cached
 
-    优先从 X main bundle 获取最新 queryId（搜索页面）
+    # 优先从 X main bundle 获取最新 queryId（搜索页面）
     # GitHub twitter-openapi 可能也过期了
     if url_fetch_fn:
         _scan_bundles(url_fetch_fn)
