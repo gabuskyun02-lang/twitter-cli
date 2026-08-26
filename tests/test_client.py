@@ -212,8 +212,8 @@ class TestBuildGraphqlUrl:
 
     def test_home_timeline_fallback_query_ids(self):
         """Keep home timeline fallbacks aligned with the current web bundle."""
-        assert FALLBACK_QUERY_IDS["HomeTimeline"] == "3b9_7tltt0hJRef-xm_3sw"
-        assert FALLBACK_QUERY_IDS["HomeLatestTimeline"] == "m1G65W9TS1-g-AllrKKYDQ"
+        assert FALLBACK_QUERY_IDS["HomeTimeline"] == "HCosKfLNW1AcOo3la3mMgg"
+        assert FALLBACK_QUERY_IDS["HomeLatestTimeline"] == "U0cdisy7QFIoTfu3-Okw0A"
 
 
 class TestStaleQueryRetry:
